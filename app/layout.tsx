@@ -72,6 +72,7 @@ export default async function RootLayout({
           'min-h-screen flex flex-col font-sans antialiased',
           fontSans.variable
         )}
+        suppressHydrationWarning
       >
         <ThemeProvider
           attribute="class"
