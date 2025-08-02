@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { generateId } from 'ai'
 
 import { useChat } from '@ai-sdk/react'
 import { ChatRequestOptions } from 'ai'
@@ -27,11 +28,12 @@ export function Chat({
   query,
   models
 }: {
-  id: string
+  id?: string
   savedMessages?: Message[]
   query?: string
   models?: Model[]
 }) {
+  const chatIdRef = useRef<string>(id || generateId())
   const scrollContainerRef = useRef<HTMLDivElement>(null)
   const [isAtBottom, setIsAtBottom] = useState(true)
 
@@ -52,10 +54,10 @@ export function Chat({
     initialMessages: savedMessages,
     id: CHAT_ID,
     body: {
-      id
+      id: chatIdRef.current
     },
     onFinish: () => {
-      window.history.replaceState({}, '', `/search/${id}`)
+      window.history.replaceState({}, '', `/search/${chatIdRef.current}`)
       window.dispatchEvent(new CustomEvent('chat-history-updated'))
     },
     onError: error => {
@@ -168,7 +170,7 @@ export function Chat({
 
       await reload({
         body: {
-          chatId: id,
+          chatId: chatIdRef.current,
           regenerate: true
         }
       })
@@ -215,7 +217,7 @@ export function Chat({
         data={data}
         onQuerySelect={onQuerySelect}
         isLoading={isLoading}
-        chatId={id}
+        chatId={chatIdRef.current}
         addToolResult={addToolResult}
         scrollContainerRef={scrollContainerRef}
         onUpdateMessage={handleUpdateAndReloadMessage}
