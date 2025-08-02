@@ -174,14 +174,10 @@ const SidebarProvider = React.forwardRef<
             }
             className={cn(
               'group/sidebar-wrapper flex min-h-svh w-full has-[[data-variant=inset]]:bg-sidebar',
-              // Prevent flash during hydration
-              !isHydrated && 'opacity-0',
-              isHydrated && 'opacity-100 transition-opacity duration-150',
               className
             )}
             ref={ref}
             {...props}
-            suppressHydrationWarning
           >
             {children}
           </div>
