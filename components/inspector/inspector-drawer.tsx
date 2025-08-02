@@ -13,7 +13,6 @@ import { InspectorPanel } from './inspector-panel'
 export function InspectorDrawer() {
   const { state, close } = useArtifact()
   const part = state.part
-  const isMobile = useMediaQuery('(max-width: 767px)')
 
   // Function to get the title based on part type (mirrors ArtifactPanel logic)
   const getTitle = () => {
@@ -29,8 +28,6 @@ export function InspectorDrawer() {
         return 'Content'
     }
   }
-
-  if (!isMobile) return null
 
   return (
     <Drawer

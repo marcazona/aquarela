@@ -22,7 +22,6 @@ export function ChatArtifactContainer({
   children: React.ReactNode
 }) {
   const { state } = useArtifact()
-  const isMobile = useMediaQuery('(max-width: 767px)') // Below md breakpoint
   const [renderPanel, setRenderPanel] = useState(state.isOpen)
   const [mounted, setMounted] = useState(false)
   const { open, openMobile, isMobile: isMobileSidebar } = useSidebar()
@@ -62,49 +61,42 @@ export function ChatArtifactContainer({
           <SidebarTrigger className="animate-fade-in" />
         )}
       </div>
-      {/* Desktop: Resizable panels (Do not render on mobile) */}
-      {!isMobile && (
-        <ResizablePanelGroup
-          direction="horizontal"
-          className="flex flex-1 min-w-0 h-full" // Responsive classes removed
-        >
-          <ResizablePanel
-            className={cn(
-              'min-w-0',
-              state.isOpen && 'transition-[flex-basis] duration-200 ease-out'
-            )}
-          >
-            {children}
-          </ResizablePanel>
-
-          {renderPanel && (
-            <>
-              <ResizableHandle />
-              <ResizablePanel
-                className={cn('overflow-hidden', {
-                  'animate-slide-in-right': state.isOpen
-                })}
-                maxSize={50}
-                minSize={30}
-                defaultSize={40}
-              >
-                <InspectorPanel />
-              </ResizablePanel>
-            </>
+      {/* Desktop: Resizable panels */}
+      <ResizablePanelGroup
+        direction="horizontal"
+        className="hidden md:flex flex-1 min-w-0 h-full"
+      >
+        <ResizablePanel
+          className={cn(
+            'min-w-0',
+            state.isOpen && 'transition-[flex-basis] duration-200 ease-out'
           )}
-        </ResizablePanelGroup>
-      )}
-
-      {/* Mobile: full-width chat + drawer (Do not render on desktop) */}
-      {isMobile && (
-        <div className="flex-1 h-full">
-          {' '}
-          {/* Responsive classes removed */}
+        >
           {children}
-          {/* ArtifactDrawer checks isMobile internally, no double check needed */}
-          <InspectorDrawer />
-        </div>
-      )}
+        </ResizablePanel>
+
+        {renderPanel && (
+          <>
+            <ResizableHandle />
+            <ResizablePanel
+              className={cn('overflow-hidden', {
+                'animate-slide-in-right': state.isOpen
+              })}
+              maxSize={50}
+              minSize={30}
+              defaultSize={40}
+            >
+              <InspectorPanel />
+            </ResizablePanel>
+          </>
+        )}
+      </ResizablePanelGroup>
+
+      {/* Mobile: full-width chat + drawer */}
+      <div className="flex-1 h-full md:hidden">
+        {children}
+        <InspectorDrawer />
+      </div>
     </div>
   )
 }
