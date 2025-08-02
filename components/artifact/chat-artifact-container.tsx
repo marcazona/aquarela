@@ -24,7 +24,12 @@ export function ChatArtifactContainer({
   const { state } = useArtifact()
   const isMobile = useMediaQuery('(max-width: 767px)') // Below md breakpoint
   const [renderPanel, setRenderPanel] = useState(state.isOpen)
+  const [mounted, setMounted] = useState(false)
   const { open, openMobile, isMobile: isMobileSidebar } = useSidebar()
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   useEffect(() => {
     if (state.isOpen) {
@@ -33,6 +38,22 @@ export function ChatArtifactContainer({
       setRenderPanel(false)
     }
   }, [state.isOpen])
+
+  // Render fallback during SSR and initial client render
+  if (!mounted) {
+    return (
+      <div className="flex-1 min-h-0 h-screen flex">
+        <div className="absolute p-4 z-50 transition-opacity duration-1000">
+          {(!open || isMobileSidebar) && (
+            <SidebarTrigger className="animate-fade-in" />
+          )}
+        </div>
+        <div className="flex-1 min-w-0 h-full">
+          {children}
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="flex-1 min-h-0 h-screen flex">
