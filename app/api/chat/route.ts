@@ -1,5 +1,7 @@
 import { cookies } from 'next/headers'
 
+export const dynamic = 'force-dynamic'
+
 import { getCurrentUserId } from '@/lib/auth/get-current-user'
 import { createManualToolStreamResponse } from '@/lib/streaming/create-manual-tool-stream'
 import { createToolCallingStreamResponse } from '@/lib/streaming/create-tool-calling-stream'
